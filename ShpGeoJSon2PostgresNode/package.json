@@ -1,0 +1,12 @@
+{
+  "name": "shpgeojson2postgresnode",
+  "version": "1.0.0",
+  "description": "Herramienta para subir una capa en formato .shp o .geojson a una BD de Postgres.",
+  "main": "main.js",
+  "scripts": {
+    "start": "main.js"
+  },
+  "keywords": [],
+  "author": "Edgar Vara Meza-Prácticas Profesionales",
+  "license": "ISC"
+}
