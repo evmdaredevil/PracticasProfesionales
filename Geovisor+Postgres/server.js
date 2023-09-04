@@ -42,7 +42,7 @@ app.get('/getTableData', async (req, res) => {
     //const query = `SELECT * FROM ${tableName}`;
     const result = await client.query(query);
     const data = result.rows;
-    res.json(data);
+    res.geojson(data);
   } catch (err) {
     console.error('Database Query Error:', err);
     res.status(500).send('Error fetching table data');

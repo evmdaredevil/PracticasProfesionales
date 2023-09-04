@@ -32,24 +32,55 @@
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Will add GeoJson layers to this
-        const layer1 = L.geoJSON(/* GeoJSON data 1 */);
-        const layer2 = L.geoJSON(/* GeoJSON data 2 */);
-        const layer3 = L.geoJSON(/* GeoJSON data 3 */);
+    // Show properties as a popUp
+    function showFeatureProperties(properties) {
+      var popupContent = '<table>';
+      for (var prop in properties) {
+        if (properties.hasOwnProperty(prop)) {
+          popupContent += '<tr><td>' + prop + '</td><td>' + properties[prop] + '</td></tr>';
+        }
+      }
+      popupContent += '</table>';
+      return popupContent;
+    }
+        // Load GeoJSON data for layer1 and layer2
+        fetch('estados.geojson')
+            .then(response => response.json())
+            .then(data => {
+                const layer1 = L.geoJSON(data, {
+                    onEachFeature: function(feature, layer) {
+                    layer.on('click', function() {
+                    var popupContent = showFeatureProperties(feature.properties);
+                    layer.bindPopup(popupContent).openPopup();
+                    });
+                }
+                }).addTo(map);
 
-        // Object for the layer control
-        const overlayLayers = {
-            "Layer 1": layer1,
-            "Layer 2": layer2,
-            "Layer 3": layer3
-        };
+                const overlayLayers = {
+                    "Layer 1": layer1
+                };
 
-        layer1.addTo(map);
-        layer2.addTo(map);
-        layer3.addTo(map);
+                L.control.layers(null, overlayLayers, { collapsed: false }).addTo(map);
+            });
 
-        // Layer control toggle
-        L.control.layers(null, overlayLayers, { collapsed: false }).addTo(map);
+        fetch('RHTenancingo.geojson')
+            .then(response => response.json())
+            .then(data => {
+                const layer2 = L.geoJSON(data, {
+                    onEachFeature: function(feature, layer) {
+                    layer.on('click', function() {
+                    var popupContent = showFeatureProperties(feature.properties);
+                    layer.bindPopup(popupContent).openPopup();
+                    });
+                }
+                }).addTo(map);
+
+                const overlayLayers = {
+                    "Layer 2": layer2
+                };
+
+                L.control.layers(null, overlayLayers, { collapsed: false }).addTo(map);
+            });
     </script>
 </body>
 </html>
