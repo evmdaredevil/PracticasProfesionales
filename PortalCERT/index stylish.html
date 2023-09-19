@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Grupo CERT</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #007BFF;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        #mapa {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        select {
+            padding: 10px 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .centered-image {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Overlay styles */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #disclaimer {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #cerrarButton {
+            cursor: pointer;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #cerrarButton:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Disclaimer Overlay -->
+    <div id="overlay">
+        <div id="disclaimer">
+            <br>
+            <img class="centered-image" src="rsc\cenapred.png" alt="CENAPRED Logo" width="15%" height="15%">
+            <br>
+            <p>La Escuela Nacional de Protección Civil está orientada a la formación sistemática e institucionalizada de capital humano que realiza actividades de la gestión integral del riesgo, como prevención, mitigación y manejo de emergencias.</p>
+            <p>El programa de Equipos Comunitarios de Respuesta a Emergencias (CERT, por sus siglas en inglés) es una iniciativa impulsada por el CENAPRED, para ser implementada localmente, que enseña a las personas a prepararse mejor para los peligros que pueden afectar a sus comunidades.</p>
+            <p>Para una mejor coordinación, el sistema requiere el registro de sus participantes y la ubicación de los equipos CERT que formalmente se van constituyendo en el país.</p>
+            <br>
+            <img class="centered-image" src="rsc/logo CERT.jpeg" alt="CERT Logo" width="35%" height="35%">
+            <br>
+            <button id="cerrarButton">CERRAR</button>
+        </div>
+    </div>
+
+    <h3>Registro del Equipo CERT</h1>
+    <p>En este apartado recabaremos la información del equipo CERT que se ha conformado. Favor de llenar todos los campos.</p>
+
+    <h1>Formulario de Registro de Grupo CERT</h1>
+    <img class="centered-image" src="rsc\logos_firma conjunta.png"  alt="CERT Logo" width="55%" height="55%">
+    
+    <form action="insertar_registro.php" method="POST">
+        <h2>Información del Grupo CERT</h2>
+
+        <label for="cNombreEquipo">Nombre del Equipo:</label>
+        <input type="text" id="cNombreEquipo" name="cNombreEquipo" required><br>
+
+        <label for="FechaCreacion">Fecha de Creación:</label>
+        <input type="date" id="FechaCreacion" name="FechaCreacion" required><br>
+
+        <label for="cNombreResponsable">Nombre del Responsable:</label>
+        <input type="text" id="cNombreResponsable" name="cNombreResponsable" required><br>
+
+        <label for="cPrimerApellidoResponsable">Primer Apellido del Responsable:</label>
+        <input type="text" id="cPrimerApellidoResponsable" name="cPrimerApellidoResponsable" required><br>
+
+        <label for="cSegundoApellidoResponsable">Segundo Apellido del Responsable:</label>
+        <input type="text" id="cSegundoApellidoResponsable" name="cSegundoApellidoResponsable" required><br>
+
+        <label for="cDomicilioCalle">Domicilio (Calle):</label>
+        <input type="text" id="cDomicilioCalle" name="cDomicilioCalle" required><br>
+
+        <label for="cColonia">Colonia:</label>
+        <input type="text" id="cColonia" name="cColonia" required><br>
+
+        <label for="cCiudad">Ciudad:</label>
+        <input type="text" id="cCiudad" name="cCiudad" required><br>
+
+        <label for="cEstado">Estado:</label>
+        <select id="cEstado" name="cEstado" required>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Colima">Colima</option>
+            <option value="Durango">Durango</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Puebla">Puebla</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Zacatecas">Zacatecas</option>
+        </select><br>
+
+        <label for="cTelefono">Teléfono:</label>
+        <input type="text" id="cTelefono" name="cTelefono" required><br>
+
+        <label for="cPostal">Código Postal:</label>
+        <input type="text" id="cPostal" name="cPostal" required><br>
+
+        <label for="cEmail">Correo Electrónico:</label>
+        <input type="email" id="cEmail" name="cEmail" required><br>
+
+        <h2>Coordenadas del Grupo CERT</h2>
+
+        <div id="mapa"></div>
+        
+        <label for="Latitud">Latitud:</label>
+        <input type="text" id="Latitud" name="Latitud" required><br>
+
+        <label for="Longitud">Longitud:</label>
+        <input type="text" id="Longitud" name="Longitud" required><br>
+
+        <h2>Miembros del Grupo CERT</h2>
+
+        <label for="Nombre">Nombre del Miembro:</label>
+        <input type="text" id="Nombre" name="Nombre[]" required><br>
+
+        <label for="PrimerApellido">Primer Apellido del Miembro:</label>
+        <input type="text" id="PrimerApellido" name="PrimerApellido[]" required><br>
+
+        <label for="SegundoApellido">Segundo Apellido del Miembro:</label>
+        <input type="text" id="SegundoApellido" name="SegundoApellido[]" required><br>
+
+        <label for="NumeroContacto">Número de Contacto del Miembro:</label>
+        <input type="text" id="NumeroContacto" name="NumeroContacto[]" required><br>
+
+        <button type="submit">Guardar Registro</button>
+    </form>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const cerrarButton = document.getElementById('cerrarButton');
+
+        cerrarButton.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+
+        // Immediately show the overlay when the page loads
+        window.addEventListener('load', function () {
+            overlay.style.display = 'block';
+        });
+
+        const mapa = L.map('mapa').setView([23.6345, -102.5528], 6); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+        let lastMarker = null; 
+
+        mapa.on('click', function (e) {
+            const latitud = e.latlng.lat;
+            const longitud = e.latlng.lng;
+
+            document.getElementById('Latitud').value = latitud;
+            document.getElementById('Longitud').value = longitud;
+            // Remove the previous marker, if any
+            if (lastMarker) {
+                mapa.removeLayer(lastMarker);
+            }
+
+            // Add a new marker at the clicked location
+            lastMarker = L.marker([latitud, longitud]).addTo(mapa);
+        });
+    </script>
+</body>
+</html>
