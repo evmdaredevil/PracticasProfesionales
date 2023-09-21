@@ -7,7 +7,14 @@
     <link rel="icon" href="rsc/cenapred.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> 
+    
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css"
+    />
+    <script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
+
 </head>
 <body>
     <!-- Disclaimer Overlay -->
@@ -25,8 +32,8 @@
             <button id="cerrarButton">CERRAR</button>
         </div>
     </div>
-
-    <h3>Registro del Equipo CERT</h1>
+    <div class="content-container">
+    <h3>Registro del Equipo CERT</h3>
     <p>En este apartado recabaremos la información del equipo CERT que se ha conformado. Favor de llenar todos los campos.</p>
 
     <h1>Formulario de Registro de Grupo CERT</h1>
@@ -59,7 +66,7 @@
         <label for="cCiudad">Ciudad:</label>
         <input type="text" id="cCiudad" name="cCiudad" required><br>
 
-        <label for="cEstado">Estado:</label>
+        <label for="cEstado">Estado:</label><br/>
         <select id="cEstado" name="cEstado" required>
             <option value="Aguascalientes">Aguascalientes</option>
             <option value="Baja California">Baja California</option>
@@ -104,17 +111,19 @@
         <label for="cEmail">Correo Electrónico:</label>
         <input type="email" id="cEmail" name="cEmail" required><br>
 
+        <br/><br/><br/>
         <h2>Coordenadas del Grupo CERT</h2>
 
         <div id="mapa"></div>
-
+    
         <label for="Latitud">Latitud:</label>
-        <input type="text" id="Latitud" name="Latitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed;"><br>
+        <input type="text" id="Latitud" name="Latitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed; width: 35%;">
 
         <label for="Longitud">Longitud:</label>
-        <input type="text" id="Longitud" name="Longitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed;"><br>
+        <input type="text" id="Longitud" name="Longitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed; width: 35%;">
 
 
+        <br/><br/><br/>
         <h2>Miembros del Grupo CERT</h2>
 
         <label for="Nombre">Nombre del Miembro:</label>
@@ -131,6 +140,7 @@
 
         <button type="submit">Guardar Registro</button>
     </form>
+    </div>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="script.js"></script>
 
