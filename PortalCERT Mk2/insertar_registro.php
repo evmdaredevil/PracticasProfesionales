@@ -45,6 +45,11 @@ try {
     
     // Redirige a una página de éxito o muestra un mensaje de éxito
     echo "Registro exitoso. Los datos se han insertado en la base de datos.";
+    echo '<script>
+    setTimeout(function() {
+        window.location.href = "index.html";
+    }, 3000); // 3000 milisegundos = 3 segundos
+    </script>';
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }

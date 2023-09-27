@@ -1,4 +1,6 @@
 <?php
+session_start(); // Inicia la sesión (si no está iniciada)
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $db = new PDO("pgsql:host=localhost;port=5433;dbname=CERTtest", "postgres", "cenapred");
@@ -22,7 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(":NumeroContacto", $numeroContacto, PDO::PARAM_STR);
         $stmt->execute();
 
-        echo "Miembro insertado correctamente.";
+        // Registro exitoso, redirigir a la última página visitada después de 3 segundos
+        $_SESSION["last_visited_page"] = $_SERVER["HTTP_REFERER"]; // Guarda la última página visitada
+        echo "Miembro registrado correctamente.";
+        header("Refresh: 3; URL=" . $_SERVER["HTTP_REFERER"]); // Redirige después de 3 segundos
     } catch (PDOException $e) {
         echo "Error al insertar el miembro: " . $e->getMessage();
     }

@@ -1,3 +1,25 @@
+<?php
+$db = new PDO("pgsql:host=localhost;port=5433;dbname=CERTtest", "postgres", "cenapred");
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$equipoSeleccionado = '';
+
+$query = "SELECT DISTINCT cNombreEquipo FROM grupocert";
+$result = $db->query($query);
+$equipos = $result->fetchAll(PDO::FETCH_COLUMN);
+
+if (isset($_POST['cNombreEquipo'])) {
+    $equipoSeleccionado = $_POST['cNombreEquipo'];
+
+    $queryMiembros = "SELECT nombre, primerapellido, segundoapellido, numerocontacto FROM miembrosgrupocert WHERE cNombreEquipo = :equipo";
+    $stmt = $db->prepare($queryMiembros);
+    $stmt->bindParam(':equipo', $equipoSeleccionado);
+    $stmt->execute();
+    $miembros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,12 +34,39 @@
 <body>
     
     <div id="content-container">
+    <img class="centered-image" src="rsc\logos_firma conjunta.png"  alt="CERT Logo" width="55%" height="55%">
         <h1>Visor Grupos CERT</h1>
         <div id="map" style="height: 1000px;"></div>
+        <h1>Miembros del Equipo:</h1>
+        <form method="POST">
+            <select name="cNombreEquipo" style="width: 80%; height: 25px; text-align:center">
+                <?php
+                foreach ($equipos as $equipo) {
+                    $selected = ($equipo == $equipoSeleccionado) ? 'selected' : '';
+                    echo "<option value='$equipo' $selected>$equipo</option>";
+                }
+                ?>
+            </select>
+            <input type="submit" value="Generar Lista de Miembros">
+            <br><br>
+        </form>
+
+        <?php
+        if (isset($miembros)) {
+            echo "<h3>Miembros de $equipoSeleccionado:</h3>";
+            echo "<ul>";
+            foreach ($miembros as $miembro) {
+                echo "<li><label><b>Nombre:     </b></label>{$miembro['nombre']} {$miembro['primerapellido']} {$miembro['segundoapellido']}  </br><label><b>Número de contacto:     </b></label>{$miembro['numerocontacto']}</li></br>";
+            }
+            echo "</ul>";
+        }
+        ?>
     </div>
+    </div>
+    
 
     <script>
-        var map = L.map('map').setView([19.4326, -99.1332], 10); // Centered on Mexico City
+        var map = L.map('map').setView([19.4326, -99.1332], 10); 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

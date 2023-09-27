@@ -34,12 +34,11 @@ $equipos = $result->fetchAll(PDO::FETCH_COLUMN);
             <button id="cerrarButton">CERRAR</button>
         </div>
     </div>
+    <form action="insertar_registro.php" method="POST">
     <h3>Registro de Miembros Equipo CERT</h3>
     <p>En este apartado recabaremos la información del miembro del equipo CERT que se ha conformado. Favor de llenar todos los campos.</p>
     <h1>Formulario de Registro de Miembro CERT</h1>
-    <img class="centered-image" src="rsc\logos_firma conjunta.png"  alt="CERT Logo" width="55%" height="55%">
-    <h1>Selecciona un equipo:</h1>
-    <form action="insertar_registro.php" method="POST">
+    <label>Selecciona un equipo:</label>
     <select name="cNombreEquipo">
         <?php
         foreach ($equipos as $equipo) {
@@ -62,6 +61,8 @@ $equipos = $result->fetchAll(PDO::FETCH_COLUMN);
     <input type="text" id="NumeroContacto" name="NumeroContacto" required><br>
 
     <button type="submit">Guardar Registro</button>
+    </br></br>
+    <img class="centered-image" src="rsc\logos_firma conjunta.png"  alt="CERT Logo" width="55%" height="55%">
 </form>
 <script>
     cerrarButton.addEventListener('click', function () {
