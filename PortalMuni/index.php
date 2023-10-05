@@ -9,7 +9,14 @@
     <div id="map" style="height: 500px;"></div>
 
     <script>
-        var map = L.map('map').setView([19.4326, -99.1332], 10); 
+        // Define the custom CRS for EPSG:3857 (Web Mercator)
+        var customCRS = L.CRS.EPSG3857;
+
+        var map = L.map('map', {
+            crs: customCRS,
+            center: L.latLng(19.4326, -99.1332), // Set the center directly
+            zoom: 10
+        });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,

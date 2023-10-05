@@ -1,47 +1,25 @@
 <?php
+// Database connection parameters
 $host = 'localhost';
 $port = '5433';
 $dbname = 'PortalMuni';
 $user = 'postgres';
 $password = 'cenapred';
 
-if (!isset($_GET['table'])) {
-    die("Table parameter is missing in the URL.");
-}
+// Get the table name from the request
+$tableName = $_GET['table'];
 
-$table = $_GET['table'];
+// Create a database connection
+$db = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
 
-$connection = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
+// Prepare and execute a SQL query to fetch GeoJSON data
+$query = "SELECT ST_AsGeoJSON(geometry) AS geojson FROM $tableName";
+$result = $db->query($query);
 
-if (!$connection) {
-    die("Connection failed");
-}
+// Fetch the GeoJSON data as an associative array
+$data = $result->fetch(PDO::FETCH_ASSOC);
 
-$query = "SELECT ST_AsGeoJSON(geometry) AS geojson FROM $table";
-echo "Query: $query"; // Debugging
-
-$result = pg_query($connection, $query);
-
-if (!$result) {
-    die("Query failed: " . pg_last_error($connection));
-}
-
-$geojson = [
-    'type' => 'FeatureCollection',
-    'features' => [],
-];
-
-while ($row = pg_fetch_assoc($result)) {
-    $feature = json_decode($row['geojson']);
-    if ($feature) {
-        $geojson['features'][] = $feature;
-    } else {
-        echo "Invalid GeoJSON data in the database for table: $table";
-    }
-}
-
+// Output the GeoJSON data with appropriate headers
 header('Content-Type: application/json');
-echo json_encode($geojson);
-
-pg_close($connection);
+echo $data['geojson'];
 ?>
