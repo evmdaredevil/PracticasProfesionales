@@ -3,18 +3,18 @@
 <head>
     <title>Map Viewer</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="map.css" /> 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
-    <div id="map" style="height: 500px;"></div>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="page-icon"></div> 
+    </div>
 
     <script>
-        // Define the custom CRS for EPSG:3857 (Web Mercator)
-        var customCRS = L.CRS.EPSG3857;
-
         var map = L.map('map', {
-            crs: customCRS,
-            center: L.latLng(19.4326, -99.1332), // Set the center directly
+            center: L.latLng(19.1987, -101.9765), 
             zoom: 10
         });
 
@@ -23,30 +23,47 @@
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        var overlayLayers = {};
+        var layerControl = L.control.layers().addTo(map); 
+
         function loadGeoJSON(tableName) {
             fetch(`get_geojson.php?table=${tableName}`)
                 .then(response => response.json())
                 .then(data => {
-                    L.geoJSON(data).addTo(map);
+                    overlayLayers[tableName] = L.geoJSON(data, {
+                        onEachFeature: function (feature, layer) {
+                            var popupContent = '<div>';
+                            for (var key in feature.properties) {
+                                if (feature.properties.hasOwnProperty(key)) {
+                                    popupContent += '<strong>' + key + ':</strong> ' + feature.properties[key] + '<br>';
+                                }
+                            }
+                            popupContent += '</div>';
+                            layer.bindPopup(popupContent);
+                        }
+                    });
+
+                    if (map.hasLayer(overlayLayers[tableName])) {
+                        map.addLayer(overlayLayers[tableName]);
+                    }
+                    layerControl.addOverlay(overlayLayers[tableName], tableName);
                 });
         }
 
         fetch('get_tables_with_geometry.php')
             .then(response => response.json())
             .then(tablesWithGeometry => {
-                var overlayLayers = {};
-                tablesWithGeometry.forEach(function(tableName) {
-                    overlayLayers[tableName] = L.layerGroup();
+                map.on('overlayadd', function (e) {
+                    var layer = e.layer;
+                    layerControl.addOverlay(layer, e.name);
                 });
 
-                L.control.layers(null, overlayLayers).addTo(map);
-
-                map.on('overlayadd', function(e) {
-                    var tableName = e.name;
-                    loadGeoJSON(tableName);
+                map.on('overlayremove', function (e) {
+                    var layer = e.layer;
+                    layerControl.removeLayer(layer);
                 });
 
-                tablesWithGeometry.forEach(function(tableName) {
+                tablesWithGeometry.forEach(function (tableName) {
                     loadGeoJSON(tableName);
                 });
             });
