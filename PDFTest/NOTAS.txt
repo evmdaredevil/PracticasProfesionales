@@ -1,0 +1,5 @@
+Instalar tcpdf:
+https://sourceforge.net/projects/tcpdf/
+
+Directorio:
+C:\xampp\php\pear
