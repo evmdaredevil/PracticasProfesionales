@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Map Viewer</title>
+    <title>Visor Estados/Municipios</title>
+    <link rel="icon" href="rsc/cenapred.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="map.css" /> 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Registro de Grupo CERT</title>
+    <title>Portal Administradores CERT</title>
     <link rel="icon" href="rsc/cenapred.png">
     <link rel="stylesheet" href="styles.css">   
     <title>Database Admin</title>
