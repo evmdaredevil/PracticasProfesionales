@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Grupo CERT</title>
+    <link rel="icon" href="rsc/cenapred.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> 
+    
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css"
+    />
+    <script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
+
+</head>
+<body>
+    <!-- Disclaimer Overlay -->
+    <div id="overlay">
+        <div id="disclaimer">
+            <br>
+            <img class="centered-image" src="rsc\cenapred.png" alt="CENAPRED Logo" width="15%" height="15%">
+            <br>
+            <p>La Escuela Nacional de Protección Civil está orientada a la formación sistemática e institucionalizada de capital humano que realiza actividades de la gestión integral del riesgo, como prevención, mitigación y manejo de emergencias.</p>
+            <p>El programa de Equipos Comunitarios de Respuesta a Emergencias (CERT, por sus siglas en inglés) es una iniciativa impulsada por el CENAPRED, para ser implementada localmente, que enseña a las personas a prepararse mejor para los peligros que pueden afectar a sus comunidades.</p>
+            <p>Para una mejor coordinación, el sistema requiere el registro de sus participantes y la ubicación de los equipos CERT que formalmente se van constituyendo en el país.</p>
+            <br>
+            <img class="centered-image" src="rsc/logo CERT.jpeg" alt="CERT Logo" width="35%" height="35%">
+            <br>
+            <button id="cerrarButton">CERRAR</button>
+        </div>
+    </div>
+    <div class="content-container">
+    <h3>Registro del Equipo CERT</h3>
+    <p>En este apartado recabaremos la información del equipo CERT que se ha conformado. Favor de llenar todos los campos.</p>
+
+    <h1>Formulario de Registro de Grupo CERT</h1>
+    <img class="centered-image" src="rsc\logos_firma conjunta.png"  alt="CERT Logo" width="55%" height="55%">
+    
+    <form action="insertar_registro.php" method="POST">
+        <h2>Información del Grupo CERT</h2>
+
+        <label for="cNombreEquipo">Nombre del Equipo:</label>
+        <input type="text" id="cNombreEquipo" name="cNombreEquipo" required><br>
+
+        <label for="FechaCreacion">Fecha de Creación:</label>
+        <input type="date" id="FechaCreacion" name="FechaCreacion" required><br>
+
+        <label for="cNombreResponsable">Nombre del Responsable:</label>
+        <input type="text" id="cNombreResponsable" name="cNombreResponsable" required><br>
+
+        <label for="cPrimerApellidoResponsable">Primer Apellido del Responsable:</label>
+        <input type="text" id="cPrimerApellidoResponsable" name="cPrimerApellidoResponsable" required><br>
+
+        <label for="cSegundoApellidoResponsable">Segundo Apellido del Responsable:</label>
+        <input type="text" id="cSegundoApellidoResponsable" name="cSegundoApellidoResponsable" required><br>
+
+        <label for="cDomicilioCalle">Domicilio (Calle):</label>
+        <input type="text" id="cDomicilioCalle" name="cDomicilioCalle" required><br>
+
+        <label for="cColonia">Colonia:</label>
+        <input type="text" id="cColonia" name="cColonia" required><br>
+
+        <label for="cCiudad">Ciudad:</label>
+        <input type="text" id="cCiudad" name="cCiudad" required><br>
+
+        <label for="cEstado">Estado:</label><br/>
+        <select id="cEstado" name="cEstado" required>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Baja California">Baja California</option>
+            <option value="Baja California Sur">Baja California Sur</option>
+            <option value="Campeche">Campeche</option>
+            <option value="Chiapas">Chiapas</option>
+            <option value="Chihuahua">Chihuahua</option>
+            <option value="Ciudad de México">Ciudad de México</option>
+            <option value="Coahuila">Coahuila</option>
+            <option value="Colima">Colima</option>
+            <option value="Durango">Durango</option>
+            <option value="Guanajuato">Guanajuato</option>
+            <option value="Guerrero">Guerrero</option>
+            <option value="Hidalgo">Hidalgo</option>
+            <option value="Jalisco">Jalisco</option>
+            <option value="Estado de México">Estado de México</option>
+            <option value="Michoacán">Michoacán</option>
+            <option value="Morelos">Morelos</option>
+            <option value="Nayarit">Nayarit</option>
+            <option value="Nuevo León">Nuevo León</option>
+            <option value="Oaxaca">Oaxaca</option>
+            <option value="Puebla">Puebla</option>
+            <option value="Querétaro">Querétaro</option>
+            <option value="Quintana Roo">Quintana Roo</option>
+            <option value="San Luis Potosí">San Luis Potosí</option>
+            <option value="Sinaloa">Sinaloa</option>
+            <option value="Sonora">Sonora</option>
+            <option value="Tabasco">Tabasco</option>
+            <option value="Tamaulipas">Tamaulipas</option>
+            <option value="Tlaxcala">Tlaxcala</option>
+            <option value="Veracruz">Veracruz</option>
+            <option value="Yucatán">Yucatán</option>
+            <option value="Zacatecas">Zacatecas</option>
+        </select><br>
+
+        <label for="cTelefono">Teléfono:</label>
+        <input type="text" id="cTelefono" name="cTelefono" required><br>
+
+        <label for="cPostal">Código Postal:</label>
+        <input type="text" id="cPostal" name="cPostal" required><br>
+
+        <label for="cEmail">Correo Electrónico:</label>
+        <input type="email" id="cEmail" name="cEmail" required><br>
+
+        <br/><br/><br/>
+        <h2>Coordenadas del Grupo CERT</h2>
+
+        <div id="mapa"></div>
+    
+        <label for="Latitud">Latitud:</label>
+        <input type="text" id="Latitud" name="Latitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed; width: 35%;">
+
+        <label for="Longitud">Longitud:</label>
+        <input type="text" id="Longitud" name="Longitud" required readonly style="background-color: #f0f0f0; cursor: not-allowed; width: 35%;">
+
+
+        <br/><br/><br/>
+        <button type="submit">Guardar Registro</button>
+    </form>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
