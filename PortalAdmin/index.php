@@ -42,7 +42,7 @@
 
             echo "<h2>REGISTROS DE GRUPOS CERT'</h2>";
             echo "<table border='1'>";
-            echo "<tr><th>ID</th><th>Nombre del Equipo</th><th>Fecha de Creación</th><th>Nombre del Responsable</th><th>Primer Apellido del Responsable</th><th>Segundo Apellido del Responsable</th><th>Calle</th><th>Colonia</th><th>Ciudad</th><th>Estado</th><th>Teléfono</th><th>Código Postal</th><th>Correo Electrónico</th><th>Acción</th></tr>";
+            echo "<tr><th>ID</th><th>Nombre del Equipo</th><th>Fecha de Creación</th><th>Nombre del Responsable</th><th>Primer Apellido del Responsable</th><th>Segundo Apellido del Responsable</th><th>Calle</th><th>Colonia</th><th>Municipio</th><th>Estado</th><th>Teléfono</th><th>Código Postal</th><th>Correo Electrónico</th><th>Acción</th></tr>";
             while ($row = pg_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td>" . $row['id'] . "</td>";
@@ -53,7 +53,7 @@
                 echo "<td>" . $row['csegundoapellidoresponsable'] . "</td>";
                 echo "<td>" . $row['cdomiciliocalle'] . "</td>";
                 echo "<td>" . $row['ccolonia'] . "</td>";
-                echo "<td>" . $row['cciudad'] . "</td>";
+                echo "<td>" . $row['cmunicipio'] . "</td>";
                 echo "<td>" . $row['cestado'] . "</td>";
                 echo "<td>" . $row['ctelefono'] . "</td>";
                 echo "<td>" . $row['cpostal'] . "</td>";

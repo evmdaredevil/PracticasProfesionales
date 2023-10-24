@@ -57,56 +57,27 @@
         <label for="cSegundoApellidoResponsable">Segundo Apellido del Responsable:</label>
         <input type="text" id="cSegundoApellidoResponsable" name="cSegundoApellidoResponsable" required><br>
 
-        <label for="cDomicilioCalle">Domicilio (Calle):</label>
-        <input type="text" id="cDomicilioCalle" name="cDomicilioCalle" required><br>
+        <label for="cEstado">Estado:</label><br/>
+        <select id="cEstado" name="cEstado" onchange="actualizarMunicipios()">
+            <option value="">Selecciona un estado</option>
+        </select><br>
+
+        <label for="cMunicipio">Municipio:</label>
+        <select id="cMunicipio" name="cMunicipio">
+            <option value="">Selecciona un municipio</option>
+        </select><br>
+
+        <label for="cPostal">Código Postal:</label>
+        <input type="text" id="cPostal" name="cPostal" required><br>
 
         <label for="cColonia">Colonia:</label>
         <input type="text" id="cColonia" name="cColonia" required><br>
 
-        <label for="cCiudad">Ciudad:</label>
-        <input type="text" id="cCiudad" name="cCiudad" required><br>
-
-        <label for="cEstado">Estado:</label><br/>
-        <select id="cEstado" name="cEstado" required>
-            <option value="Aguascalientes">Aguascalientes</option>
-            <option value="Baja California">Baja California</option>
-            <option value="Baja California Sur">Baja California Sur</option>
-            <option value="Campeche">Campeche</option>
-            <option value="Chiapas">Chiapas</option>
-            <option value="Chihuahua">Chihuahua</option>
-            <option value="Ciudad de México">Ciudad de México</option>
-            <option value="Coahuila">Coahuila</option>
-            <option value="Colima">Colima</option>
-            <option value="Durango">Durango</option>
-            <option value="Guanajuato">Guanajuato</option>
-            <option value="Guerrero">Guerrero</option>
-            <option value="Hidalgo">Hidalgo</option>
-            <option value="Jalisco">Jalisco</option>
-            <option value="Estado de México">Estado de México</option>
-            <option value="Michoacán">Michoacán</option>
-            <option value="Morelos">Morelos</option>
-            <option value="Nayarit">Nayarit</option>
-            <option value="Nuevo León">Nuevo León</option>
-            <option value="Oaxaca">Oaxaca</option>
-            <option value="Puebla">Puebla</option>
-            <option value="Querétaro">Querétaro</option>
-            <option value="Quintana Roo">Quintana Roo</option>
-            <option value="San Luis Potosí">San Luis Potosí</option>
-            <option value="Sinaloa">Sinaloa</option>
-            <option value="Sonora">Sonora</option>
-            <option value="Tabasco">Tabasco</option>
-            <option value="Tamaulipas">Tamaulipas</option>
-            <option value="Tlaxcala">Tlaxcala</option>
-            <option value="Veracruz">Veracruz</option>
-            <option value="Yucatán">Yucatán</option>
-            <option value="Zacatecas">Zacatecas</option>
-        </select><br>
+        <label for="cDomicilioCalle">Domicilio (Calle):</label>
+        <input type="text" id="cDomicilioCalle" name="cDomicilioCalle" required><br>
 
         <label for="cTelefono">Teléfono:</label>
         <input type="text" id="cTelefono" name="cTelefono" required><br>
-
-        <label for="cPostal">Código Postal:</label>
-        <input type="text" id="cPostal" name="cPostal" required><br>
 
         <label for="cEmail">Correo Electrónico:</label>
         <input type="email" id="cEmail" name="cEmail" required><br>

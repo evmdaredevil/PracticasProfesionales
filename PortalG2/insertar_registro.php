@@ -12,7 +12,7 @@ try {
     $cSegundoApellidoResponsable = $_POST["cSegundoApellidoResponsable"];
     $cDomicilioCalle = $_POST["cDomicilioCalle"];
     $cColonia = $_POST["cColonia"];
-    $cCiudad = $_POST["cCiudad"];
+    $cMunicipio = $_POST["cMunicipio"];
     $cEstado = $_POST["cEstado"];
     $cTelefono = $_POST["cTelefono"];
     $cPostal = $_POST["cPostal"];
@@ -21,8 +21,8 @@ try {
     $Longitud = $_POST["Longitud"];
 
     // Inserta los datos en la tabla GrupoCERT
-    $sql = "INSERT INTO GrupoCERT (cNombreEquipo, FechaCreacion, cNombreResponsable, cPrimerApellidoResponsable, cSegundoApellidoResponsable, cDomicilioCalle, cColonia, cCiudad, cEstado, cTelefono, cPostal, cEmail, coordenadas) 
-            VALUES (:cNombreEquipo, :FechaCreacion, :cNombreResponsable, :cPrimerApellidoResponsable, :cSegundoApellidoResponsable, :cDomicilioCalle, :cColonia, :cCiudad, :cEstado, :cTelefono, :cPostal, :cEmail, ST_GeomFromText(:coordenadas, 4326))";
+    $sql = "INSERT INTO GrupoCERT (cNombreEquipo, FechaCreacion, cNombreResponsable, cPrimerApellidoResponsable, cSegundoApellidoResponsable, cDomicilioCalle, cColonia, cMunicipio, cEstado, cTelefono, cPostal, cEmail, coordenadas) 
+            VALUES (:cNombreEquipo, :FechaCreacion, :cNombreResponsable, :cPrimerApellidoResponsable, :cSegundoApellidoResponsable, :cDomicilioCalle, :cColonia, :cMunicipio, :cEstado, :cTelefono, :cPostal, :cEmail, ST_GeomFromText(:coordenadas, 4326))";
     
     $stmt = $db->prepare($sql);
     $stmt->bindValue(":cNombreEquipo", $cNombreEquipo);
@@ -32,7 +32,7 @@ try {
     $stmt->bindValue(":cSegundoApellidoResponsable", $cSegundoApellidoResponsable);
     $stmt->bindValue(":cDomicilioCalle", $cDomicilioCalle);
     $stmt->bindValue(":cColonia", $cColonia);
-    $stmt->bindValue(":cCiudad", $cCiudad);
+    $stmt->bindValue(":cMunicipio", $cMunicipio);
     $stmt->bindValue(":cEstado", $cEstado);
     $stmt->bindValue(":cTelefono", $cTelefono);
     $stmt->bindValue(":cPostal", $cPostal);

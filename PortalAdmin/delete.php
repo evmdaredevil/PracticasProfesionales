@@ -15,22 +15,62 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && isset($_GET['ta
         die("Connection failed: " . pg_last_error());
     }
 
-    $query = "DELETE FROM $table WHERE id = $id";
-    $result = pg_query($conn, $query);
+    if ($table === 'grupocert') {
+        // If the table is 'grupocert', fetch the related Miembros first
+        $query = "SELECT cnombreequipo FROM grupocert WHERE id = $id";
+        $result = pg_query($conn, $query);
 
-    if ($result) {
-        echo "Registro con la id:  $id  ha sido eliminado exitosamente.";
-        echo '<script>
-        setTimeout(function() {
-            window.location.href = "index.php";
-        }, 3000); // 1000 milisegundos = 3 segundos
-        </script>';
+        if ($row = pg_fetch_assoc($result)) {
+            $equipoName = $row['cnombreequipo'];
+
+            // Delete the Grupo
+            $query = "DELETE FROM $table WHERE id = $id";
+            $result = pg_query($conn, $query);
+
+            if ($result) {
+                echo "Registro con la id: $id ha sido eliminado exitosamente.";
+                echo '<script>
+                setTimeout(function() {
+                    window.location.href = "index.php";
+                }, 3000);
+                </script>';
+
+                // Delete related Miembros with the same cnombreequipo
+                $query = "DELETE FROM miembrosgrupocert WHERE cnombreequipo = '$equipoName'";
+                $result = pg_query($conn, $query);
+
+                if ($result) {
+                    echo "Los Miembros relacionados con el Grupo '$equipoName' también han sido eliminados.";
+                } else {
+                    echo "Error al eliminar los Miembros relacionados: " . pg_last_error($conn);
+                }
+            } else {
+                echo "Error: " . pg_last_error($conn);
+            }
+        } else {
+            echo "No se encontró el Grupo con la id: $id";
+        }
+    } elseif ($table === 'miembrosgrupocert') {
+        // If the table is 'miembrosgrupocert', simply delete the Miembro
+        $query = "DELETE FROM $table WHERE id = $id";
+        $result = pg_query($conn, $query);
+
+        if ($result) {
+            echo "Registro con la id: $id ha sido eliminado exitosamente.";
+            echo '<script>
+            setTimeout(function() {
+                window.location.href = "index.php";
+            }, 3000);
+            </script>';
+        } else {
+            echo "Error: " . pg_last_error($conn);
+        }
     } else {
-        echo "Error: " . pg_last_error($conn);
+        echo "Tabla no válida.";
     }
 
     pg_close($conn);
 } else {
-    echo "Invalid request.";
+    echo "Solicitud no válida.";
 }
 ?>
