@@ -1,0 +1,1 @@
+Instalar en Python: pandas, geopandas, sqlalchemy, psycopg2, geoalchemy2, pyproj 
