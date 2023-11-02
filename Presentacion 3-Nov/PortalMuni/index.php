@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visor Estados/Municipios</title>
+    <link rel="icon" href="rsc/cenapred.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="map.css" /> 
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="page-icon"></div> 
+    </div>
+
+
+    <script>
+        var map = L.map('map', {
+            center: L.latLng(19.1987, -101.9765),
+            zoom: 10
+        });
+
+        L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+            maxZoom: 19,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }).addTo(map);
+
+        var overlayLayers = {};
+        var layerControl = L.control.layers().addTo(map);
+
+        function loadGeoJSON(tableName) {
+            fetch(`get_geojson.php?table=${tableName}`)
+                .then(response => response.json())
+                .then(data => {
+                    overlayLayers[tableName] = L.geoJSON(data, {
+                        onEachFeature: function (feature, layer) {
+                            var popupContent = '<div>';
+                            for (var key in feature.properties) {
+                                if (feature.properties.hasOwnProperty(key)) {
+                                    popupContent += '<strong>' + key + ':</strong> ' + feature.properties[key] + '<br>';
+                                }
+                            }
+                            popupContent += '</div>';
+                            layer.bindPopup(popupContent);
+                        }
+                    });
+
+                    if (map.hasLayer(overlayLayers[tableName])) {
+                        map.addLayer(overlayLayers[tableName]);
+                    }
+                    layerControl.addOverlay(overlayLayers[tableName], tableName);
+                });
+        }
+
+        // Load table names from the JSON file
+        fetch('tables_with_geometry.json')
+            .then(response => response.json())
+            .then(tablesWithGeometry => {
+                map.on('overlayadd', function (e) {
+                    var layer = e.layer;
+                    layerControl.addOverlay(layer, e.name);
+                });
+
+                map.on('overlayremove', function (e) {
+                    var layer = e.layer;
+                    layerControl.removeLayer(layer);
+                });
+
+                tablesWithGeometry.tables.forEach(function (tableName) {
+                    loadGeoJSON(tableName);
+                });
+            });
+    </script>
+</body>
+</html>
