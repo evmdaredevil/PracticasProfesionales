@@ -1,12 +1,10 @@
 
 const map = L.map('map').setView([19.1987, -101.9765], 10);
 
-
 const googleLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
   maxZoom: 20,
 }).addTo(map);
-
 
 const baseMaps = {
   'Google Maps': googleLayer,
@@ -18,7 +16,6 @@ const overlayMaps = {
 };
 
 L.control.layers(baseMaps, overlayMaps).addTo(map);
-
 
 function createGeoJSONLayer(tableName) {
   const geoJSONLayer = L.geoJSON(null, {
@@ -34,6 +31,7 @@ function createGeoJSONLayer(tableName) {
 
   return geoJSONLayer;
 }
+
 
 function fetchGeoJSONData(tableName, callback) {
   fetch(`get_geojson.php?table=${tableName}`)
@@ -85,88 +83,46 @@ map.on('draw:created', function (event) {
 
   const circleCenter = turf.point([layer.getLatLng().lng, layer.getLatLng().lat]);
   const circle = turf.circle(circleCenter, layer.getRadius());
+  const circleArea = turf.area(circleCenter, layer.getRadius());
+  const geojsonURL = "http://localhost/PortalMuniJs/get_geojson.php?table=agebs";
 
-  for (const overlayKey in overlayMaps) {
-    map.removeLayer(overlayMaps[overlayKey]);
-  }
+  fetch(geojsonURL)
+    .then(response => response.json())
+    .then(data => {
+      const geojsonLayer = data;
 
-  for (const overlayKey in overlayMaps) {
-    const originalLayer = overlayMaps[overlayKey];
+      // Extract the geometry from the GeoJSON layer
+      const layerGeometry = geojsonLayer.features[0].geometry;
 
-    originalLayer.eachLayer((overlayLayer) => {
-      if (overlayLayer.setStyle) {
-        const originalGeometry = overlayLayer.toGeoJSON().geometry;
-        const convertedGeometry = turf.getType(originalGeometry) === 'Point'
-          ? originalGeometry
-          : turf.pointOnSurface(originalGeometry);
-
-        const intersection = turf.booleanOverlap(circle, convertedGeometry);
-
-        if (intersection) {
-          let intersectionLayer = L.geoJSON(convertedGeometry, {
-            style: { opacity: 1 },
-            onEachFeature: onEachFeature,
-          });
-
-          map.addLayer(intersectionLayer);
-        }
-      }
-    });
-  }
-});
-
-document.getElementById('generateGeoJSONButton').addEventListener('click', function() {
-  if (drawnItems.getLayers().length > 0) {
-    const drawnCircle = drawnItems.getLayers()[0];
-    const circleCenter = turf.point([drawnCircle.getLatLng().lng, drawnCircle.getLatLng().lat]);
-    const circle = turf.circle(circleCenter, drawnCircle.getRadius());
-
-    const filteredGeoJSON = {
-      type: 'FeatureCollection',
-      features: []
-    };
-
-    for (const tableName in overlayMaps) {
-      const originalLayer = overlayMaps[tableName];
-
-      originalLayer.eachLayer((overlayLayer) => {
-        if (overlayLayer.setStyle) {
-          const originalGeometry = overlayLayer.toGeoJSON().geometry;
-          const convertedGeometry = turf.getType(originalGeometry) === 'Point'
-            ? originalGeometry
-            : turf.pointOnSurface(originalGeometry);
-
-          if (turf.booleanOverlap(circle, convertedGeometry)) {
-            filteredGeoJSON.features.push({
-              type: 'Feature',
-              geometry: convertedGeometry,
-              properties: overlayLayer.feature.properties
+      // Iterate through all features in layerGeometry
+      layerGeometry.coordinates.forEach(featureCoordinates => {
+        // Ensure that each LinearRing has at least 4 positions
+        if (featureCoordinates.length >= 4) {
+          const featureGeometry = turf.polygon([featureCoordinates]);
+          // Perform turf.intersect operation for each feature
+          const intersectionResult = turf.intersect(circle, featureGeometry);
+          // Check if there is an intersection
+          if (intersectionResult) {
+            console.log("Intersection found:", intersectionResult);
+            // Create a new GeoJSON layer with the intersected features
+            const intersectionLayer = L.geoJSON(intersectionResult, {
+              style: {
+                fillOpacity: 0.5,
+                color: 'red', // You can customize the style as needed
+              },
+              onEachFeature: onEachFeature,
             });
+
+            // Add the new layer to the map
+            map.addLayer(intersectionLayer);
+          } else {
+            console.log("No intersection found");
           }
+        } else {
+          console.log("Invalid LinearRing: Each LinearRing must have 4 or more positions.");
         }
       });
-    }
-
-    const filteredGeoJSONString = JSON.stringify(filteredGeoJSON, null, 2);
-
-    const blob = new Blob([filteredGeoJSONString], { type: 'application/json' });
-
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'filtered_geojson.json';
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } else {
-    alert('Please draw a circle on the map before generating GeoJSON.');
-  }
+    })
+    .catch(error => console.error("Error fetching GeoJSON:", error));
 });
-
-
-
-
-
-
-
 

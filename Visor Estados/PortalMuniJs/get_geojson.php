@@ -17,7 +17,7 @@ try {
     $features = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $properties = $row;
-        unset($properties['geometry']); // Exclude the 'geometry' column
+        unset($properties['geometry']); 
         $geometry = json_decode($row['geojson']);
         $feature = [
             'type' => 'Feature',
