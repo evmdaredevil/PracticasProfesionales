@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoServer Map Visualizer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 1000px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    var geoserverUrl = "http://localhost:8080/geoserver/";
+    var workspace = "CENAPRED";
+
+    // Create the map
+    var map = L.map('map').setView([0, 0], 2);
+
+    // Add a base layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Create layer control
+    var layerControl = L.control.layers().addTo(map);
+
+    // Retrieve layer names from GeoServer GetCapabilities
+    var capabilitiesUrl = geoserverUrl + 'wms?service=WMS&version=1.3.0&request=GetCapabilities';
+    fetch(capabilitiesUrl)
+        .then(response => response.text())
+        .then(data => {
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(data, "text/xml");
+            var layers = xmlDoc.querySelectorAll('Layer > Name');
+
+            layers.forEach(layer => {
+                var layerName = layer.textContent;
+                var displayName = layerName.split(':').pop(); // Use the layer name without the workspace prefix
+                addGeoServerLayer(layerName, displayName);
+            });
+        })
+        .catch(error => console.error('Error fetching GeoServer capabilities:', error));
+
+    // Function to add GeoServer layers to the map
+    function addGeoServerLayer(layerName, displayName) {
+        // Use WMS for the base map
+        if (displayName === "OSM") {
+            var baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            });
+            baseLayer.addTo(map);
+            layerControl.addBaseLayer(baseLayer, displayName);
+            return;
+        }
+
+        // Use WFS for vector layers
+        var wfsUrl = geoserverUrl + 'wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=' + layerName + '&outputFormat=application/json&' +
+            'srsName=EPSG:4326';
+
+        fetch(wfsUrl)
+            .then(response => response.json())
+            .then(data => {
+                var geoJsonLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        var popupContent = "<h3>" + "PROPIEDADES: " + "</h3>";
+
+                        for (var prop in feature.properties) {
+                            if (feature.properties.hasOwnProperty(prop) && prop !== 'name') {
+                                popupContent += "<p><b>" + prop + ":</b> " + feature.properties[prop] + "</p>";
+                            }
+                        }
+
+                        layer.bindPopup(popupContent, { maxHeight: 100 }); // Set the maximum width for the popup
+                    }
+                });
+
+                // Add the layer to the map
+                geoJsonLayer.addTo(map);
+
+                // Add the layer to the layer control
+                layerControl.addOverlay(geoJsonLayer, displayName);
+            })
+            .catch(error => console.error('Error fetching WFS features:', error));
+    }
+</script>
+
+</body>
+</html>
