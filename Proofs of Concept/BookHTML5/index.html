@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Book Opening</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #080808;
+    }
+
+    .book-container {
+      perspective: 1000px;
+      width: 200px;
+      height: 300px;
+    }
+
+    .book {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: openBook 4s forwards;
+    }
+
+    .cover {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #3498db;
+      transform-origin: right;
+    }
+
+    .cover.back {
+      background-color: #2ecc71;
+      transform-origin: left;
+      transform: rotateY(180deg);
+    }
+
+    .content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.pinimg.com/originals/1f/e7/b6/1fe7b66ec88c3b46739419184e58ef95.jpg') center/cover; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      transform-origin: left;
+    }
+
+    .content.back {
+      background-color: aliceblue;
+      transform: rotateY(180deg);
+    }
+
+    @keyframes openBook {
+      to {
+        transform: rotateY(-180deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="book-container" onclick="redirectToPage('https://example.com')">
+    <div class="book">
+      <div class="cover"></div>
+      <div class="content">
+        <h1>Your Editable Title</h1>
+      </div>
+      <div class="cover back"></div>
+      <div class="content back">
+        <p>Your editable content goes here.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function redirectToPage(url) {
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>

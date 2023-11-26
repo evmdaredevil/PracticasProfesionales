@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba de concepto: Visor Web de Mapas usando Software Libre</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #282c35;
+    }
+
+    #book {
+      width: 200px;
+      height: 300px;
+      background-color: #970000;
+      position: absolute;
+      border-style: solid;
+      border-color:#282c35;
+      top: 50%;
+      left: 50%;
+      background: url('https://i.pinimg.com/originals/1f/e7/b6/1fe7b66ec88c3b46739419184e58ef95.jpg') center/cover; 
+      transform: translate(-50%, -50%) perspective(800px) rotateY(20deg) scale(1);
+      transform-origin: 0% 100%;
+      transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #book.open {
+      transform: translate(-50%, -50%) perspective(800px) rotateY(0deg) scale(1.5);
+    }
+
+    #title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: fantasy;
+      font-size: 24px;
+      color: rgb(0, 0, 0)c0c;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="book">
+    <div id="title">Atlas de Riesgos</div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById('book').classList.add('open');
+    }, 1000);
+
+    setTimeout(() => {
+      document.getElementById('book').style.transition = 'transform 0.5s ease-out';
+      document.getElementById('book').style.transform = 'translate(-50%, -50%) perspective(800px) rotateY(0deg) scale(1.5)';
+    }, 2000);
+
+    setTimeout(() => {
+      window.location.href = "file:///C:/GitHub/PracticasProfesionales/PracticasProfesionales/Visor%20Estados/GeoserverDef/index.html";
+    }, 3000);
+  </script>
+</body>
+</html>

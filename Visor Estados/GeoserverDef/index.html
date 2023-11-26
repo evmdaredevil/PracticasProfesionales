@@ -7,14 +7,21 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
     <style>
-        #map {
-            height: 600px;
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
-
+    
+        #map {
+            height: 100vh; /* Set the height to 100% of the viewport height */
+        }
+    
         #floating-window {
             position: absolute;
-            bottom: 200px; 
-            right: 40px; 
+            bottom: 200px;
+            right: 40px;
             background-color: white;
             padding: 10px;
             border: 1px solid #ccc;
@@ -22,6 +29,7 @@
             z-index: 1000;
         }
     </style>
+    
 </head>
 <body>
 
