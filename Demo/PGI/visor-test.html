@@ -69,14 +69,29 @@
     map.addControl(drawControl);
 
     map.on(L.Draw.Event.CREATED, function (event) {
-        var layer = event.layer;
-        drawnItems.clearLayers();
-        drawnItems.addLayer(layer);
-        var turfMultiPolygon = turf.multiPolygon(lastGeoJsonLayer.toGeoJSON().features[0].geometry.coordinates);
-        console.log(turfMultiPolygon);
-        var area = turf.multiPolygon(layer);
-        console.log(area);
+    var layer = event.layer;
+    drawnItems.clearLayers();
+    drawnItems.addLayer(layer);
+    
+    var drawnPolygon = layer.toGeoJSON().geometry.coordinates;
+    
+    // Send AJAX request to the PHP script
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'intersection.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        // Process the intersection result
+        var intersectionResult = JSON.parse(xhr.responseText);
+        console.log('Intersection Result:', intersectionResult);
+        
+        // Add the intersection result as a new layer (adjust as needed)
+        L.geoJSON(intersectionResult).addTo(map);
+    };
+    
+    // Send the drawn polygon coordinates to the PHP script
+    xhr.send('drawnPolygon=' + JSON.stringify(drawnPolygon));
     });
+
 
     // Retrieve layer names from GeoServer GetCapabilities
     var capabilitiesUrl = geoserverUrl + 'wms?service=WMS&version=1.3.0&request=GetCapabilities';

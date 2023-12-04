@@ -15,7 +15,7 @@
         }
     
         #map {
-            height: 100vh; /* Set the height to 100% of the viewport height */
+            height: 100vh; 
         }
     
         #floating-window {
@@ -46,7 +46,7 @@
 
 <script>
     var geoserverUrl = "http://localhost:8080/geoserver/";
-    var workspace = "CENAPRED";
+    var workspace = "Analisis";
 
     var map = L.map('map').setView([19.1987, -101.9765], 10);
 
@@ -72,10 +72,6 @@
         var layer = event.layer;
         drawnItems.clearLayers();
         drawnItems.addLayer(layer);
-        var turfMultiPolygon = turf.multiPolygon(lastGeoJsonLayer.toGeoJSON().features[0].geometry.coordinates);
-        console.log(turfMultiPolygon);
-        var area = turf.multiPolygon(layer);
-        console.log(area);
     });
 
     // Retrieve layer names from GeoServer GetCapabilities
@@ -126,7 +122,7 @@
                             }
                         }
 
-                        layer.bindPopup(popupContent, { maxHeight: 100 }); // Set the maximum width for the popup
+                        layer.bindPopup(popupContent, { maxHeight: 100 }); 
                     }
                 });
 
@@ -134,20 +130,7 @@
                 lastGeoJsonLayer = geoJsonLayer;
                 var multiPolygon = turf.multiPolygon(geoJsonLayer.toGeoJSON().features[0].geometry.coordinates);
                 console.log(geoJsonLayer.toGeoJSON());
-
-                //Testzone
-                var turfMultiPolygon = turf.multiPolygon(geoJsonLayer.toGeoJSON().features[0].geometry.coordinates);
-                // Extract the geometry from Turf MultiPolygon
-                var geometry = turf.getGeom(turfMultiPolygon);
-                // Create LatLng objects from the coordinates
-                var latLngs = geometry.coordinates.map(ring =>
-                ring.map(coord => L.latLng(coord[1], coord[0]))
-                );
-                // Create a Leaflet MultiPolygon layer
-                L.polygon(latLngs).addTo(map);
-                console.log(latLngs);
                 layerControl.addOverlay(geoJsonLayer, displayName);
-                layerControl.addOverlay(L.polygon(latLngs), 'Plata');
             })
             .catch(error => console.error('Error fetching WFS features:', error));
     }

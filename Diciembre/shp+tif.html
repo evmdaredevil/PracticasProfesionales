@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Visualizer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div id="map" style="height: 100vh;"></div>
+
+<script>
+    L.TileLayer.WMS.include({
+        _errorCallback: function (done, layers, url, error) {
+            console.error('WMS error:', error);
+            done.call(this, layers);
+        }
+    });
+
+  var map = L.map('map').setView([28.184, -106.006], 6); 
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  var tifLayer = L.tileLayer.wms('http://localhost:8080/geoserver/Análisis/wms', {
+    layers: 'An%C3%A1lisis:Susceptibilidad_Laderas_2020_Chihuahua',
+    format: 'image/png',
+    transparent: true,
+    version: '1.1.0',
+    attribution: 'Your TIF Layer Attribution'
+  }).addTo(map);
+
+  var shpLayer = L.tileLayer.wms('http://localhost:8080/geoserver/Análisis/wms', {
+    layers: 'An%C3%A1lisis:SEP_CCT_2015_Mod',
+    format: 'image/png',
+    transparent: true,
+    version: '1.1.0',
+    attribution: 'Your SHP Layer Attribution'
+  }).addTo(map);
+
+  var baseLayers = {
+    'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }),
+  };
+
+  var overlayLayers = {
+    'TIF Layer': tifLayer,
+    'SHP Layer': shpLayer
+  };
+
+  L.control.layers(baseLayers, overlayLayers).addTo(map);
+</script>
+
+</body>
+</html>
