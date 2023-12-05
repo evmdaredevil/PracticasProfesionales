@@ -1,0 +1,42 @@
+body {
+    margin: 25;
+    padding: 0;
+    background: url('rsc/1.jpg') center fixed;
+  }
+  
+  #map {
+    height: 98vh;
+    width: 90%;
+    float: left;
+  }
+  
+  #legend {
+    float: left;
+    margin-left: 10px;
+  }
+  
+  #info-window {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+  }
+  
+  #info-window h2 {
+    margin-bottom: 10px;
+  }
+  
+  .info-button {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #4285f4;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  

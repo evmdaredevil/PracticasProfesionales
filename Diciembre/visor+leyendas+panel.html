@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GeoServer Layer Visualizer with Legend</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
   <style>
     body {
       margin: 25;
@@ -21,13 +22,42 @@
       float: left;
       margin-left: 10px;
     }
+    #info-window {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ccc;
+      z-index: 1000;
+    }
+    #info-window h2 {
+      margin-bottom: 10px;
+    }
+    .info-button {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+      background-color: #4285f4;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <div id="legend"></div>
+  <div id="info-window">
+    <h2>Opciones</h2>
+    <button class="info-button" onclick="verTabla()">Ver tabla</button>
+    <button class="info-button" onclick="verGeoJSON()">GeoJSON</button>
+    <button class="info-button" onclick="descargar()">Descarga</button>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
   <script>
     const workspace = 'Analisis';
     const layers = [
@@ -63,6 +93,7 @@
 
       // Track the order of added layers
       layerOrder.push(layerName);
+      
 
       function setMapView(minX, minY, maxX, maxY) {
         const minLatLng = L.latLng(minY, minX);
@@ -109,6 +140,36 @@
 
     });
     const layerControl = L.control.layers(null, layerControlOptions, { collapsed: false }).addTo(map);
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+    map.addControl(drawControl);
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+        drawnItems.clearLayers();
+        drawnItems.addLayer(layer);
+    });
+    // Add functions for button actions
+    function verTabla() {
+      // Add logic for 'Ver tabla' button
+      console.log('Ver tabla button clicked');
+    }
+
+    function verGeoJSON() {
+      // Add logic for 'GeoJSON' button
+      console.log('GeoJSON button clicked');
+    }
+
+    function descargar() {
+      // Add logic for 'Descarga' button
+      console.log('Descarga button clicked');
+    }
   </script>
 </body>
 </html>
