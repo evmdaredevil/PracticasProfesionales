@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoServer Layer Visualizer with Legend</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+      width: 70%;
+      float: left;
+    }
+    #legend {
+      float: left;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend"></div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    const workspace = 'Analisis';
+    const store = 'Susceptibilidad_Laderas_2020_Chihuahua';
+    const layer = 'Susceptibilidad_Laderas_2020_Chihuahua';
+
+    const map = L.map('map').setView([28, -106], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const geoserverLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms', {
+      layers: workspace + ':' + layer,
+      format: 'image/png',
+      transparent: true
+    }).addTo(map);
+
+    const legendUrl = 'http://localhost:8080/geoserver/' + workspace + '/wms?REQUEST=GetLegendGraphic&LAYER=' + workspace + ':' + layer + '&FORMAT=image/png';
+    
+    document.getElementById('legend').innerHTML = '<img src="' + legendUrl + '" alt="Legend">';
+  </script>
+</body>
+</html>
