@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoServer Layer Visualizer with Legend</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 500px;
+      width: 70%;
+      float: left;
+    }
+    #legend {
+      float: left;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend"></div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    const workspace = 'Analisis';
+    const store = 'Susceptibilidad_Laderas_2020_Chihuahua';
+    const layers = [
+      'Susceptibilidad_Laderas_2020_Chihuahua',
+      'CENAPREDInfierProfTR100',
+      'CENAPRED_PuntosCriticos2020',
+      'Colonias_INE_2015'
+    ];
+    const map = L.map('map').setView([28, -106], 6); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    const layerControlOptions = {};
+    layers.forEach(layerName => {
+      if (layerName === 'Colonias_INE_2015') {
+        const layer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms', {
+          layers: workspace + ':' + layerName,
+          format: 'image/png',
+          transparent: true
+        });
+
+        layerControlOptions[layerName] = layer;
+        layer.addTo(map);
+      } else {
+        const wmsLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms', {
+          layers: workspace + ':' + layerName,
+          format: 'image/png',
+          transparent: true
+        });
+
+        layerControlOptions[layerName] = wmsLayer;
+        wmsLayer.addTo(map);
+      }
+    });
+    L.control.layers(null, layerControlOptions).addTo(map);
+    const legendUrl = 'http://localhost:8080/geoserver/' + workspace + '/wms?REQUEST=GetLegendGraphic&LAYER=' + workspace + ':' + layers[0] + '&FORMAT=image/png';
+    document.getElementById('legend').innerHTML = '<img src="' + legendUrl + '" alt="Legend">';
+  </script>
+</body>
+</html>
