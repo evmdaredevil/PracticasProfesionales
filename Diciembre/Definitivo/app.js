@@ -18,6 +18,7 @@ L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
 }).addTo(map);
 
 const layerOrder = [];
+let currentAddedLayer;
 
 const layerControlOptions = {};
 layers.forEach((layerName, index) => {
@@ -40,9 +41,12 @@ layers.forEach((layerName, index) => {
     map.fitBounds(bounds, { maxBounds: bounds, maxBoundsViscosity: 1 });
   }
 
+  layerIndex = index;
+
   map.on('overlayadd', function(event) {
     const addedLayer = event.layer;
     const layerIndex = layerOrder.indexOf(addedLayer.options.layers.split(':')[1]);
+    currentAddedLayer = layers[layerIndex];
     switch (layers[layerIndex]) {
       case 'Susceptibilidad_Laderas_2020_Chihuahua':
         setMapView(-109.2796245414146,25.475300203831356,-103.27247620241886,31.893253282396635)
@@ -94,11 +98,14 @@ map.on(L.Draw.Event.CREATED, function(event) {
 });
 
 function verTabla() {
-  console.log('Ver tabla button clicked');
+  var url = 'http://localhost/Tables/';
+  window.open(url, '_blank');
 }
+
 
 function verGeoJSON() {
   console.log('GeoJSON button clicked');
+  console.log('Current addedLayer value:', currentAddedLayer);
 }
 
 function descargar() {
