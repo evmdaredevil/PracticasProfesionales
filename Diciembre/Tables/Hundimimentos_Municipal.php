@@ -4,7 +4,7 @@ $port = '5433';
 $dbname = 'Analisis';
 $user = 'postgres';
 $password = 'cenapred';
-$table = 'IRCT_2020';
+$table = 'Hundimimentos_Municipal';
 
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
@@ -12,8 +12,7 @@ if (!$conn) {
     die("Connection failed: " . pg_last_error());
 }
 
-// Query to select all data from the table
-$query = 'SELECT * FROM public."IRCT_2020"';
+$query = 'SELECT * FROM public."Hundimimentos_Municipal"';
 
 $result = pg_query($conn, $query);
 
@@ -31,7 +30,7 @@ if (!$result) {
 </head>
 <body>
 
-    <h2>Table: <?php echo $table; ?></h2>
+    <h2>Tabulado de: <?php echo $table; ?></h2>
 
     <table border="1">
         <tr>

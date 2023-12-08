@@ -36,7 +36,7 @@ function displayTableData($tableName) {
     </head>
     <body>
 
-        <h2>Table: <?php echo $tableName; ?></h2>
+        <h2>Tabulado de: <?php echo $tableName; ?></h2>
 
         <table border="1">
             <tr>

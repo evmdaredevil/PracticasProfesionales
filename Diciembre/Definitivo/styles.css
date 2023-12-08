@@ -6,7 +6,7 @@ body {
   
   #map {
     height: 98vh;
-    width: 90%;
+    width: 85%;
     float: left;
   }
   
@@ -19,14 +19,17 @@ body {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    background-color: white;
+    background-color: rgba(14, 13, 13, 0.329);
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     z-index: 1000;
   }
   
   #info-window h2 {
+    color: whitesmoke;
+    margin-top: 10px;
     margin-bottom: 10px;
+    font-family: Helvetica;
   }
   
   .info-button {
