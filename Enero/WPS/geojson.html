@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor con capa GeoJSON + PopUps</title>
+    <link rel="icon" href="rsc/cenapred.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+    <link rel="icon" type="image/png" href="rsc/cenapred.png" sizes="16x16">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    
+        #map {
+            height: 100vh; 
+        }
+    
+        #floating-window {
+            position: absolute;
+            bottom: 200px;
+            right: 40px;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+    </style>
+    
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+<script>
+    var geoserverUrl = "http://localhost:8080/geoserver/";
+    var workspace = "Analisis";
+
+    const map = L.map('map').setView([23.6345, -102.5528], 6);
+
+    L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        attribution: '© Google',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        maxZoom: 20,
+    }).addTo(map);
+
+    var layerControl = L.control.layers().addTo(map);
+
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+    map.addControl(drawControl);
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+        drawnItems.clearLayers();
+        drawnItems.addLayer(layer);
+    });
+
+    // Function to add GeoServer layers to the map
+    function addGeoServerLayer(layerName, displayName) {
+        // Check if the layerName is 'Analisis:Hundimimentos_Municipal'
+        if (layerName !== 'Analisis:Hundimimentos_Municipal') {
+            // Skip layers other than 'Hundimimentos_Municipal'
+            return;
+        }
+
+        // Use WFS for vector layers
+        var wfsUrl = geoserverUrl + 'wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=' + layerName + '&outputFormat=application/json&' +
+            'srsName=EPSG:4326';
+
+        fetch(wfsUrl)
+            .then(response => response.json())
+            .then(data => {
+                var geoJsonLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        var popupContent = "<h3>" + "PROPIEDADES: " + "</h3>";
+
+                        for (var prop in feature.properties) {
+                            if (feature.properties.hasOwnProperty(prop) && prop !== 'name') {
+                                popupContent += "<p><b>" + prop + ":</b> " + feature.properties[prop] + "</p>";
+                            }
+                        }
+
+                        layer.bindPopup(popupContent, { maxHeight: 100 });
+                    }
+                });
+
+                geoJsonLayer.addTo(map);
+                var multiPolygon = turf.multiPolygon(geoJsonLayer.toGeoJSON().features[0].geometry.coordinates);
+                console.log(geoJsonLayer.toGeoJSON());
+                layerControl.addOverlay(geoJsonLayer, displayName);
+            })
+            .catch(error => console.error('Error fetching WFS features:', error));
+    }
+
+    addGeoServerLayer('Analisis:Hundimimentos_Municipal', 'Hundimimentos_Municipal');
+</script>
+</body>
+</html>

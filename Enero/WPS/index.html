@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visor Geoserver WMS y simbología</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="rsc/cenapred.png" sizes="16x16">
+</head>
+<body>
+  <div id="map"></div>
+  <div id="legend"></div>
+  <div id="info-window">
+    <h2>Opciones</h2>
+    <button class="info-button" onclick="verTabla()">Ver tabla</button>
+    <button class="info-button" onclick="verEstadistica()">Ver estadística</button>
+    <button class="info-button" onclick="verGeoJSON()">GeoJSON</button>
+    <button class="info-button" onclick="descargar()">Descarga</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
