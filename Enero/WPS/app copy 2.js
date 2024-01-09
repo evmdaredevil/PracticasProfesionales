@@ -114,7 +114,7 @@ map.on(L.Draw.Event.CREATED, function(event) {
         <wps:Reference mimeType="text/xml" xlink:href="http://geoserver/wfs" method="POST">
           <wps:Body>
             <wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:Analisis="www.analisis.com">
-              <wfs:Query typeName="Analisis:${currentAddedLayer}"/>
+              <wfs:Query typeName="Analisis:IRCT_2020"/>
             </wfs:GetFeature>
           </wps:Body>
         </wps:Reference>
@@ -147,17 +147,8 @@ map.on(L.Draw.Event.CREATED, function(event) {
     // Process the JSON result as needed
     console.log(jsonResult);
 
-    // Create a GeoJSON layer and add it to the map
-    var geojsonLayer = L.geoJSON(jsonResult, {
-      onEachFeature: function (feature, layer) {
-        // Create a pop-up content dynamically based on feature properties
-        var popupContent = "<b>Propiedades:</b><br>";
-        for (var key in feature.properties) {
-          popupContent += key + ": " + feature.properties[key] + "<br>";
-        }
-        layer.bindPopup(popupContent);
-      }
-    }).addTo(map);
+    // Add the received JSON layer to the map
+    L.geoJSON(jsonResult).addTo(map);
   })
   .catch(error => {
     console.error('Error executing WPS query:', error);
@@ -186,7 +177,6 @@ function geoJsonToWkt(geoJson) {
   }
   return wkt;
 }
-
 
 
 function verTabla() {

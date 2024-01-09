@@ -114,7 +114,7 @@ map.on(L.Draw.Event.CREATED, function(event) {
         <wps:Reference mimeType="text/xml" xlink:href="http://geoserver/wfs" method="POST">
           <wps:Body>
             <wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:Analisis="www.analisis.com">
-              <wfs:Query typeName="Analisis:${currentAddedLayer}"/>
+              <wfs:Query typeName="Analisis:IRCT_2020"/>
             </wfs:GetFeature>
           </wps:Body>
         </wps:Reference>
@@ -151,7 +151,7 @@ map.on(L.Draw.Event.CREATED, function(event) {
     var geojsonLayer = L.geoJSON(jsonResult, {
       onEachFeature: function (feature, layer) {
         // Create a pop-up content dynamically based on feature properties
-        var popupContent = "<b>Propiedades:</b><br>";
+        var popupContent = "<b>Feature Properties:</b><br>";
         for (var key in feature.properties) {
           popupContent += key + ": " + feature.properties[key] + "<br>";
         }
