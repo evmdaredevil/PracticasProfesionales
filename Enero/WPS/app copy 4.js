@@ -96,38 +96,13 @@ map.on(L.Draw.Event.CREATED, function(event) {
   drawnItems.clearLayers();
   drawnItems.addLayer(layer);
   // Convert the drawn layer to GeoJSON
-  var geoJsonData = draw2Geojson(layer);
+  var geoJsonData = layer.toGeoJSON();
+  //geojson2WKT(geoJsonData);
   // Convert GeoJSON to WKT
-  wktData = geojson2WKT(geoJsonData);
-  // Just something to motivate me:
-  console.log("Getting here is a W(kt): " + wktData); 
-});
-
-function draw2Geojson(layer){
-  if (layer instanceof L.Circle) {
-    // Handle circles separately
-    geoJsonData = {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [layer.getLatLng().lng, layer.getLatLng().lat]
-      },
-      properties: {
-        radius: layer.getRadius()
-        // You can add other circle properties as needed
-      }
-    };
-  } else {
-    // For other layer types, use the default toGeoJSON method
-    geoJsonData = layer.toGeoJSON();
-  }
-  return geoJsonData;
-}
-
-function geojson2WKT(geoJsonData){
   var type = geoJsonData.geometry.type;
   var coordinates = geoJsonData.geometry.coordinates;
   var wkt = type.toUpperCase() + " (";
+
   if (type === "Polygon") {
     coordinates.forEach(function (ring) {
       wkt += "(";
@@ -137,34 +112,45 @@ function geojson2WKT(geoJsonData){
       wkt = wkt.slice(0, -1) + "),";
     });
     wkt = wkt.slice(0, -1) + ")";
-    polygonRequest(wkt);
   } else if (type === "Point") {
     wkt += coordinates.join(" ") + ")";
-    console.log("Good! Let's now check wether we've got a point or a circle... ");
-    if (geoJsonData.properties.radius!=null){
-    console.log("Do we have a radius?...  YES! "+ geoJsonData.properties.radius);
-
-    }
-    else{
-    console.log("Nope! No radius");
-    pointRequest(wkt);
-    }
   } else {
     console.error("Unsupported geometry type: " + type);
     return null;
   }
-  return wkt;
-}
 
-function polygonRequest(wktData) {
-  //
-}
+  // Print the WKT data to the console or use it as needed
+  console.log(wkt);
+  
+  const wpsXml = `<?xml version="1.0" encoding="UTF-8"?>
+  <wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+    <ows:Identifier>vec:Clip</ows:Identifier>
+    <wps:DataInputs>
+      <wps:Input>
+        <ows:Identifier>features</ows:Identifier>
+        <wps:Reference mimeType="text/xml" xlink:href="http://geoserver/wfs" method="POST">
+          <wps:Body>
+            <wfs:GetFeature service="WFS" version="1.0.0" outputFormat="GML2" xmlns:Analisis="www.analisis.com">
+              <wfs:Query typeName="Analisis:${currentAddedLayer}"/>
+            </wfs:GetFeature>
+          </wps:Body>
+        </wps:Reference>
+      </wps:Input>
+      <wps:Input>
+        <ows:Identifier>clip</ows:Identifier>
+        <wps:Data>
+          <wps:ComplexData mimeType="application/wkt"><![CDATA[${wkt}]]></wps:ComplexData>
+        </wps:Data>
+      </wps:Input>
+    </wps:DataInputs>
+    <wps:ResponseForm>
+      <wps:RawDataOutput mimeType="application/json">
+        <ows:Identifier>result</ows:Identifier>
+      </wps:RawDataOutput>
+    </wps:ResponseForm>
+  </wps:Execute>
+  `;
 
-function pointRequest(wktData) {
-  //
-}
-
-function xml2Map(wpsXml) {
   // Make a POST request to the Geoserver WPS endpoint
   fetch('http://localhost:8080/geoserver/wps', {
     method: 'POST',
@@ -177,6 +163,7 @@ function xml2Map(wpsXml) {
   .then(jsonResult => {
     // Process the JSON result as needed
     console.log(jsonResult);
+
     // Create a GeoJSON layer and add it to the map
     var geojsonLayer = L.geoJSON(jsonResult, {
       onEachFeature: function (feature, layer) {
@@ -192,6 +179,18 @@ function xml2Map(wpsXml) {
   .catch(error => {
     console.error('Error executing WPS query:', error);
   });
+});
+
+function geojson2WKT(geoJSON){
+  
+}
+
+function polygon(wkt) {
+
+}
+
+function request2Map() {
+
 }
 
 function verTabla() {
