@@ -346,7 +346,35 @@ function verEstadistica() {
 }
 
 function verGeoJSON() {
-  window.open('http://localhost/VGeoserver/geojson.html', '_blank');
+  // Check if geojsonLayer exists
+  if (!geojsonLayer) {
+    console.error("geojsonLayer is not defined.");
+    return;
+  }
+
+  // Convert geojsonLayer to GeoJSON string
+  const geojsonString = JSON.stringify(geojsonLayer.toGeoJSON());
+
+  // Create a Blob with the GeoJSON string
+  const blob = new Blob([geojsonString], { type: "application/json" });
+
+  // Create a link element
+  const link = document.createElement("a");
+
+  // Set the link's properties
+  link.href = URL.createObjectURL(blob);
+  link.download = "exported.geojson";
+
+  // Append the link to the document
+  document.body.appendChild(link);
+
+  // Trigger a click on the link to initiate the download
+  link.click();
+
+  // Remove the link from the document
+  document.body.removeChild(link);
+
+  console.log("GeoJSON exported successfully.");
 }
 
 
