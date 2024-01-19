@@ -19,6 +19,7 @@ L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
 
 const layerOrder = [];
 let currentAddedLayer;
+let geojsonLayer;
 
 const layerControlOptions = {};
 layers.forEach((layerName, index) => {
@@ -80,7 +81,7 @@ layers.forEach((layerName, index) => {
   });
 
 });
-const layerControl = L.control.layers(null, layerControlOptions, { collapsed: false }).addTo(map);
+const layerControl = L.control.layers(null, layerControlOptions, { collapsed: true }).addTo(map);
 var drawnItems = new L.FeatureGroup();
 map.addLayer(drawnItems);
 
@@ -100,7 +101,7 @@ map.on(L.Draw.Event.CREATED, function(event) {
   // Convert GeoJSON to WKT
   wktData = geojson2WKT(geoJsonData);
   // Just something to motivate me:
-  console.log("Getting here is a W(kt): " + wktData); 
+  console.log("Finish: Getting here is a W(kt): " + wktData); 
 });
 
 function draw2Geojson(layer){
@@ -114,7 +115,6 @@ function draw2Geojson(layer){
       },
       properties: {
         radius: layer.getRadius()
-        // You can add other circle properties as needed
       }
     };
   } else {
@@ -128,7 +128,7 @@ function geojson2WKT(geoJsonData){
   var type = geoJsonData.geometry.type;
   var coordinates = geoJsonData.geometry.coordinates;
   var wkt = type.toUpperCase() + " (";
-  if (type === "Polygon") {
+  if (type === "Polygon" ) {
     coordinates.forEach(function (ring) {
       wkt += "(";
       ring.forEach(function (point) {
@@ -143,7 +143,7 @@ function geojson2WKT(geoJsonData){
     console.log("Good! Let's now check wether we've got a point or a circle... ");
     if (geoJsonData.properties.radius!=null){
     console.log("Do we have a radius?...  YES! "+ geoJsonData.properties.radius);
-
+    circleRequest(wkt,geoJsonData.properties.radius);  
     }
     else{
     console.log("Nope! No radius");
@@ -270,7 +270,6 @@ function circleRequest(wktData,radius) {
     });
   };
 
-
   function xml2Wkt(geoJson) {
     // Parse the JSON string to a JavaScript object
     const parsedGeoJson = JSON.parse(geoJson);
@@ -309,7 +308,7 @@ function xml2Map(wpsXml) {
     // Process the JSON result as needed
     console.log(jsonResult);
     // Create a GeoJSON layer and add it to the map
-    var geojsonLayer = L.geoJSON(jsonResult, {
+    geojsonLayer = L.geoJSON(jsonResult, {
       onEachFeature: function (feature, layer) {
         // Create a pop-up content dynamically based on feature properties
         var popupContent = "<b>Propiedades:</b><br>";
@@ -317,6 +316,13 @@ function xml2Map(wpsXml) {
           popupContent += key + ": " + feature.properties[key] + "<br>";
         }
         layer.bindPopup(popupContent);
+      },
+      style: function (feature) {
+        // Check if 'GRCT' field is 'Muy alto' and set the contour color accordingly
+        return {
+          color: feature.properties['GRCT'] === 'Muy alto' ? 'red' : 'blue',
+          // Add other styling properties as needed
+        };
       }
     }).addTo(map);
   })
@@ -324,6 +330,7 @@ function xml2Map(wpsXml) {
     console.error('Error executing WPS query:', error);
   });
 }
+
 
 function verTabla() {
   if (
@@ -376,6 +383,7 @@ function verGeoJSON() {
 
   console.log("GeoJSON exported successfully.");
 }
+
 
 
 function descargar() {
