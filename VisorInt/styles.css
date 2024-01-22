@@ -1,0 +1,45 @@
+body {
+    margin: 25;
+    padding: 0;
+    background: url('rsc/1.jpg') center fixed;
+  }
+  
+  #map {
+    height: 98vh;
+    width: 85%;
+    float: left;
+  }
+  
+  #legend {
+    float: left;
+    margin-left: 10px;
+  }
+  
+  #info-window {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(14, 13, 13, 0.329);
+    padding: 10px;
+    border: 1px solid #000000;
+    z-index: 1000;
+  }
+  
+  #info-window h2 {
+    color: whitesmoke;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: Helvetica;
+  }
+  
+  .info-button {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #4285f4;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
