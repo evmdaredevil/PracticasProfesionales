@@ -88,7 +88,7 @@ class App:
         GButton_558["command"] = self.GButton_558_command
 
         GButton_383=tk.Button(root)
-        GButton_383["bg"] = "#f0f0f0"
+        GButton_383["bg"] = "#e2f0f0"
         ft = tkFont.Font(family='Times',size=10)
         GButton_383["font"] = ft
         GButton_383["fg"] = "#000000"
