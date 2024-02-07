@@ -1,0 +1,32 @@
+CREATE EXTENSION postgis;
+
+-- Crear la tabla para el grupo CERT
+CREATE TABLE GrupoCERT (
+    id SERIAL PRIMARY KEY,
+    cNombreEquipo VARCHAR(50),
+    FechaCreacion DATE,
+    cNombreResponsable VARCHAR(50),
+    cPrimerApellidoResponsable VARCHAR(50),
+    cSegundoApellidoResponsable VARCHAR(50),
+    cEstado VARCHAR(80),
+    cMunicipio VARCHAR(80),
+    cDomicilioCalle VARCHAR(150),
+    cPostal NUMERIC(5),
+    cColonia VARCHAR(80),
+    cTelefono NUMERIC(13),
+    cEmail VARCHAR(60),
+    coordenadas GEOMETRY(Point, 4326) -- Para almacenar coordenadas con Leaflet
+);
+
+-- Crear la tabla para los miembros del grupo CERT
+CREATE TABLE MiembrosGrupoCERT (
+    id SERIAL PRIMARY KEY,
+    cNombreEquipo VARCHAR(50),
+    Nombre VARCHAR(60),
+    PrimerApellido VARCHAR(30),
+    SegundoApellido VARCHAR(30),
+    NumeroContacto VARCHAR(60)
+);
+
+-- Crear un índice espacial para las coordenadas
+CREATE INDEX idx_coordenadas ON GrupoCERT USING GIST(coordenadas);
